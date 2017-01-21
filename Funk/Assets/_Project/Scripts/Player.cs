@@ -6,7 +6,7 @@ public class Player : MonoBehaviour
 {
     public enum State
     {
-        USE,
+        DEFAULT,
         PAINT,
         SIZE
     }
@@ -59,11 +59,9 @@ public class Player : MonoBehaviour
             m_IsOnGround = false;
         }
 
-        if (m_State == State.USE)
-        {
-            UseAbility(SandPainting.Instance.GetSandColor(transform.position));
-        }
-        else if (m_State == State.PAINT)
+        UseAbility(SandPainting.Instance.GetSandColor(transform.position));
+
+        if (m_State == State.PAINT)
             SandPainting.Instance.SetTerrainColor(transform.position, m_Color);
     }
 
@@ -101,7 +99,7 @@ public class Player : MonoBehaviour
         // Select states and sans color
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            m_State = State.USE;
+            m_State = State.DEFAULT;
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
@@ -122,7 +120,7 @@ public class Player : MonoBehaviour
         // Reset and set values
         switch (m_State)
         {
-            case State.USE:
+            case State.DEFAULT:
                 UIManager.Instance.SetAbility("Ability");
                 break;
 
