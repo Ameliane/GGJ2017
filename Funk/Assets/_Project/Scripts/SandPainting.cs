@@ -3,7 +3,6 @@ using System.Collections;
 
 public class SandPainting : MonoBehaviour
 {
-
     public enum SandColor
     {
         DEFAULT,
@@ -12,36 +11,39 @@ public class SandPainting : MonoBehaviour
         SIZE
     };
 
-    public Terrain m_Terrain;
-    public SandColor m_SandColor;
-    public float m_Radius = 2;
+    [SerializeField]
+    Terrain m_Terrain;
 
-    private float[,,] m_OriginalMap;
+    [SerializeField]
+    SandColor m_SandColor;
 
-    // Use this for initialization
+    [SerializeField]
+    float m_Radius = 2;
+
+    float[,,] m_OriginalMap;
+
+    public static SandPainting Instance = null;
+
     void Start()
     {
+        if (Instance == null)
+            Instance = this;
+        else
+            Destroy(gameObject);
+
         m_OriginalMap = m_Terrain.terrainData.GetAlphamaps(
             0, 0, m_Terrain.terrainData.alphamapWidth, m_Terrain.terrainData.alphamapHeight);
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if (Input.GetButtonDown("StateSwitch"))
-            m_SandColor++;
-
-        if (m_SandColor >= SandColor.SIZE)
-            m_SandColor = 0;
-
-        SetTerrainColor();
-        
+               
     }
 
-    private void SetTerrainColor()
+    public void SetTerrainColor(Vector3 aPos, SandColor aColor)
     {
         // get the normalized position of this game object relative to the terrain
-        Vector3 relativePos = (transform.position - m_Terrain.gameObject.transform.position);
+        Vector3 relativePos = (aPos - m_Terrain.gameObject.transform.position);
         Vector3 pos;
         pos.x = relativePos.x / m_Terrain.terrainData.size.x;
         pos.y = relativePos.y / m_Terrain.terrainData.size.y;
@@ -66,7 +68,7 @@ public class SandPainting : MonoBehaviour
         int posXInTerrain = (int)(pos.x * m_Terrain.terrainData.alphamapWidth);
         int posYInTerrain = (int)(pos.z * m_Terrain.terrainData.alphamapHeight);
 
-        // TODO: Deal with extremities
+        //Deal with extremities
         int x = posXInTerrain - offset;
         x = x < 0 ? 0 : x;
         int y = posYInTerrain - offset;
@@ -94,12 +96,50 @@ public class SandPainting : MonoBehaviour
                     }
 
                     // Set the correct SplatMap
-                    splatMap[i, j, (int)m_SandColor] = 1;
+                    splatMap[i, j, (int)aColor] = 1;
                 }
             }
         }
 
         m_Terrain.terrainData.SetAlphamaps(x, y, splatMap);
+    }
+
+    public SandColor GetSandColor(Vector3 aPos)
+    {
+        // get the normalized position of this game object relative to the terrain
+        Vector3 relativePos = (aPos - m_Terrain.gameObject.transform.position);
+        Vector3 pos;
+        pos.x = relativePos.x / m_Terrain.terrainData.size.x;
+        pos.y = relativePos.y / m_Terrain.terrainData.size.y;
+        pos.z = relativePos.z / m_Terrain.terrainData.size.z;
+
+        // If outside of map, don't paint
+        if (relativePos.x < 0 || relativePos.z < 0)
+        {
+            Debug.Log("Out of Bounds");
+            return SandColor.SIZE;
+        }
+        if (relativePos.x > m_Terrain.terrainData.size.x || relativePos.z > m_Terrain.terrainData.size.z)
+        {
+            Debug.Log("Out of Bounds");
+            return SandColor.SIZE;
+        }
+
+        int posXInTerrain = (int)(pos.x * m_Terrain.terrainData.alphamapWidth);
+        int posYInTerrain = (int)(pos.z * m_Terrain.terrainData.alphamapHeight);
+
+        float[,,] splatMap = m_Terrain.terrainData.GetAlphamaps(posXInTerrain, posYInTerrain, 1, 1);
+
+        for (int i = 0; i < (int)SandColor.SIZE; i++)
+        {
+            if (splatMap[0, 0, i] == 1)
+            {
+                Debug.Log((SandColor)i);
+                return (SandColor)i;
+            }
+        }
+
+        return SandColor.SIZE;
     }
 
     private void OnApplicationQuit()
