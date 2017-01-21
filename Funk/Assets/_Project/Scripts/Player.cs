@@ -47,7 +47,10 @@ public class Player : MonoBehaviour
         }
 
         if (m_State == State.USE)
-            SandPainting.Instance.GetSandColor(transform.position);
+        {
+            m_Color = SandPainting.Instance.GetSandColor(transform.position);
+            UseAbility();
+        }
         else if (m_State == State.PAINT)
             SandPainting.Instance.SetTerrainColor(transform.position, m_Color);
     }
@@ -102,6 +105,27 @@ public class Player : MonoBehaviour
         {
             m_State = State.PAINT;
             m_Color = SandPainting.SandColor.FAST;
+        }
+    }
+
+    void UseAbility()
+    {
+        switch (m_Color)
+        {
+            case SandPainting.SandColor.DEFAULT:
+                break;
+            case SandPainting.SandColor.BOUNCE:
+                // Bounce here
+                Debug.Log("Bouncy");
+                break;
+            case SandPainting.SandColor.FAST:
+                // Fast here
+                Debug.Log("Speedy");
+                break;
+            case SandPainting.SandColor.SIZE:
+                break;
+            default:
+                break;
         }
     }
 }

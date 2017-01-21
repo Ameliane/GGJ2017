@@ -134,7 +134,6 @@ public class SandPainting : MonoBehaviour
         {
             if (splatMap[0, 0, i] == 1)
             {
-                Debug.Log((SandColor)i);
                 return (SandColor)i;
             }
         }
