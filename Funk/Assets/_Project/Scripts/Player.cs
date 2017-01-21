@@ -12,13 +12,23 @@ public class Player : MonoBehaviour
     }
 
     [SerializeField]
-    float m_Speed = 10;
+    float m_BaseSpeed = 10;
+
+    [SerializeField]
+    float m_AbilitySpeed = 20;
+
+    float m_Speed;
 
     [SerializeField]
     float m_TurnSpeed = 80;
 
     [SerializeField]
-    float m_JumpPower = 7;
+    float m_BaseJumpPower = 7;
+
+    [SerializeField]
+    float m_AbilityJumpPower = 14;
+
+    float m_JumpPower;
 
     [SerializeField]
     float m_MaxGroundAngle = 60;
@@ -32,6 +42,9 @@ public class Player : MonoBehaviour
     void Start()
     {
         m_Body = GetComponent<Rigidbody>();
+
+        m_Speed = m_BaseSpeed;
+        m_JumpPower = m_BaseJumpPower;
     }
 
     void Update()
@@ -144,17 +157,20 @@ public class Player : MonoBehaviour
 
     void UseAbility(SandPainting.SandColor aColor)
     {
+        m_JumpPower = m_BaseJumpPower;
+        m_Speed = m_BaseSpeed;
+
         switch (aColor)
         {
             case SandPainting.SandColor.DEFAULT:
                 break;
             case SandPainting.SandColor.BOUNCE:
                 // Bounce here
-
+                m_JumpPower = m_AbilityJumpPower;
                 break;
             case SandPainting.SandColor.FAST:
                 // Fast here
-
+                m_Speed = m_AbilitySpeed;
                 break;
             case SandPainting.SandColor.SIZE:
                 break;
