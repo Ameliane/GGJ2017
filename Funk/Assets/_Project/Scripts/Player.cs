@@ -75,7 +75,14 @@ public class Player : MonoBehaviour
     {
         if (Vector3.Angle(aHit.contacts[0].normal, Vector3.up) < m_MaxGroundAngle)
         {
-            m_IsOnGround = true;
+            if (SandPainting.Instance.GetSandColor(transform.position) == SandPainting.SandColor.BOUNCE)
+            {
+                m_Body.velocity = aHit.impulse;
+            }
+            else
+            {
+                m_IsOnGround = true;
+            }
         }
     }
 
