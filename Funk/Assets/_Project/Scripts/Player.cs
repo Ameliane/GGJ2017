@@ -68,7 +68,7 @@ public class Player : MonoBehaviour
     void FixedUpdate()
     {
         m_Body.AddForce(transform.forward * Input.GetAxisRaw("Vertical") * m_Speed, ForceMode.Acceleration);
-        if (m_IsOnGround) m_Body.velocity = Vector3.Scale(m_Body.velocity, new Vector3(0.95f, 1, 0.95f)); //Drag, but without vertical drag!
+        m_Body.velocity = Vector3.Scale(m_Body.velocity, new Vector3(0.98f, 1, 0.98f)); //Drag, but without vertical drag!
     }
 
     void OnCollisionEnter(Collision aHit)
