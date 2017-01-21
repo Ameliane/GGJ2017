@@ -42,7 +42,7 @@ public class SandPainting : MonoBehaviour
     {
         RaycastHit hit;
 
-        if (Physics.Raycast(aPos, -Vector3.up, out hit, 2.0f))
+        if (Physics.Raycast(aPos + ( Vector3.up * 2 ), -Vector3.up, out hit, 5.0f))
         {
             if (hit.collider.gameObject.GetComponent<Terrain>())
                 m_Terrain = hit.collider.gameObject.GetComponent<Terrain>();
