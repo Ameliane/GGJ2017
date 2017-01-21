@@ -29,12 +29,12 @@ public class Player : MonoBehaviour
     State m_State;
     SandPainting.SandColor m_Color;
 
-	void Start ()
+    void Start()
     {
         m_Body = GetComponent<Rigidbody>();
-	}
+    }
 
-    void Update ()
+    void Update()
     {
         SwitchState();
 
@@ -48,14 +48,13 @@ public class Player : MonoBehaviour
 
         if (m_State == State.USE)
         {
-            m_Color = SandPainting.Instance.GetSandColor(transform.position);
-            UseAbility();
+            UseAbility(SandPainting.Instance.GetSandColor(transform.position));
         }
         else if (m_State == State.PAINT)
             SandPainting.Instance.SetTerrainColor(transform.position, m_Color);
     }
-	
-	void FixedUpdate ()
+
+    void FixedUpdate()
     {
         m_Body.AddForce(transform.forward * Input.GetAxisRaw("Vertical") * m_Speed, ForceMode.Acceleration);
         m_Body.velocity = Vector3.Scale(m_Body.velocity, new Vector3(0.95f, 1, 0.95f)); //Drag, but without vertical drag!
@@ -106,21 +105,56 @@ public class Player : MonoBehaviour
             m_State = State.PAINT;
             m_Color = SandPainting.SandColor.FAST;
         }
+
+        // Reset and set values
+        switch (m_State)
+        {
+            case State.USE:
+                UIManager.Instance.SetAbility("Ability");
+                break;
+
+            case State.PAINT:
+                switch (m_Color)
+                {
+                    case SandPainting.SandColor.DEFAULT:
+                        UIManager.Instance.SetAbility("Paint Default");
+                        break;
+
+                    case SandPainting.SandColor.BOUNCE:
+                        UIManager.Instance.SetAbility("Paint Bounce");
+                        break;
+
+                    case SandPainting.SandColor.FAST:
+                        UIManager.Instance.SetAbility("Paint Fast");
+                        break;
+
+                    case SandPainting.SandColor.SIZE:
+                        break;
+                    default:
+                        break;
+                }
+                break;
+
+            case State.SIZE:
+                break;
+            default:
+                break;
+        }
     }
 
-    void UseAbility()
+    void UseAbility(SandPainting.SandColor aColor)
     {
-        switch (m_Color)
+        switch (aColor)
         {
             case SandPainting.SandColor.DEFAULT:
                 break;
             case SandPainting.SandColor.BOUNCE:
                 // Bounce here
-                Debug.Log("Bouncy");
+
                 break;
             case SandPainting.SandColor.FAST:
                 // Fast here
-                Debug.Log("Speedy");
+
                 break;
             case SandPainting.SandColor.SIZE:
                 break;
