@@ -11,7 +11,6 @@ public class SandPainting : MonoBehaviour
         SIZE
     };
 
-    [SerializeField]
     Terrain m_Terrain;
 
     [SerializeField]
@@ -20,7 +19,7 @@ public class SandPainting : MonoBehaviour
     [SerializeField]
     float m_Radius = 2;
 
-    float[,,] m_OriginalMap;
+    //float[,,] m_OriginalMap;
 
     public static SandPainting Instance = null;
 
@@ -31,8 +30,7 @@ public class SandPainting : MonoBehaviour
         else
             Destroy(gameObject);
 
-        m_OriginalMap = m_Terrain.terrainData.GetAlphamaps(
-            0, 0, m_Terrain.terrainData.alphamapWidth, m_Terrain.terrainData.alphamapHeight);
+        //m_OriginalMap = m_Terrain.terrainData.GetAlphamaps(0, 0, m_Terrain.terrainData.alphamapWidth, m_Terrain.terrainData.alphamapHeight);
     }
 
     void Update()
@@ -40,8 +38,27 @@ public class SandPainting : MonoBehaviour
 
     }
 
+    private void GetTerrain(Vector3 aPos)
+    {
+        RaycastHit hit;
+
+        if (Physics.Raycast(aPos, -Vector3.up, out hit, 2.0f))
+        {
+            if (hit.collider.gameObject.GetComponent<Terrain>())
+                m_Terrain = hit.collider.gameObject.GetComponent<Terrain>();
+            return;
+        }
+
+        m_Terrain = null;
+    }
+
     public void SetTerrainColor(Vector3 aPos, SandColor aColor)
     {
+        GetTerrain(aPos);
+
+        if (m_Terrain == null)
+            return;
+
         // get the normalized position of this game object relative to the terrain
         Vector3 relativePos = (aPos - m_Terrain.gameObject.transform.position);
         Vector3 pos;
@@ -106,6 +123,11 @@ public class SandPainting : MonoBehaviour
 
     public SandColor GetSandColor(Vector3 aPos)
     {
+        GetTerrain(aPos);
+
+        if (m_Terrain == null)
+            return SandColor.SIZE;
+
         // get the normalized position of this game object relative to the terrain
         Vector3 relativePos = (aPos - m_Terrain.gameObject.transform.position);
         Vector3 pos;
@@ -143,6 +165,29 @@ public class SandPainting : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        m_Terrain.terrainData.SetAlphamaps(0, 0, m_OriginalMap);
+        //m_Terrain.terrainData.SetAlphamaps(0, 0, m_OriginalMap);
+
+        Terrain[] terrains = Object.FindObjectsOfType<Terrain>();
+
+        foreach(Terrain t in terrains)
+        {
+            float[,,] splatMap = t.terrainData.GetAlphamaps(0, 0, t.terrainData.alphamapWidth, t.terrainData.alphamapHeight);
+
+            for (int i = 0; i < t.terrainData.alphamapWidth; i++)
+            {
+                for (int j = 0; j < t.terrainData.alphamapHeight; j++)
+                {
+                    splatMap[i, j, 0] = 1;
+
+                    // Reset SplatMap
+                    for (int c = 1; c < (int)SandColor.SIZE; c++)
+                    {
+                        splatMap[i, j, c] = 0;
+                    }
+                }
+            }
+
+            t.terrainData.SetAlphamaps(0, 0, splatMap);
+        }
     }
 }
