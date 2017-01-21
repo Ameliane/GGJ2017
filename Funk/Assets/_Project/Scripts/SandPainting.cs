@@ -37,7 +37,7 @@ public class SandPainting : MonoBehaviour
 
     void Update()
     {
-               
+
     }
 
     public void SetTerrainColor(Vector3 aPos, SandColor aColor)

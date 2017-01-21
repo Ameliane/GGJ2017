@@ -66,6 +66,7 @@
     <Compile Include="Assets\_Project\Scripts\FollowCamera.cs" />
     <Compile Include="Assets\_Project\Scripts\Player.cs" />
     <Compile Include="Assets\_Project\Scripts\SandPainting.cs" />
+    <Compile Include="Assets\_Project\Scripts\UIManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\SkyboxPack\ReadMe!.txt" />
