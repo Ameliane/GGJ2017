@@ -4,10 +4,11 @@ using System.Collections;
 [RequireComponent(typeof(Rigidbody))]
 public class Player : MonoBehaviour
 {
-    public enum State
+    public enum Ability
     {
         DEFAULT,
-        PAINT,
+        BOUNCE,
+        FAST,
         SIZE
     }
 
@@ -36,7 +37,7 @@ public class Player : MonoBehaviour
 
     Rigidbody m_Body = null;
 
-    State m_State;
+    Ability m_Ability;
     SandPainting.SandColor m_Color;
 
     void Start()
@@ -61,10 +62,10 @@ public class Player : MonoBehaviour
             m_IsOnGround = false;
         }
 
-        UseAbility(SandPainting.Instance.GetSandColor(transform.position));
-
-        if (m_State == State.PAINT)
-            SandPainting.Instance.SetTerrainColor(transform.position, m_Color);
+        //UseAbility(SandPainting.Instance.GetSandColor(transform.position));
+        //
+        //if (m_State == State.PAINT)
+        //    SandPainting.Instance.SetTerrainColor(transform.position, m_Color);
     }
 
     void FixedUpdate()
@@ -77,7 +78,7 @@ public class Player : MonoBehaviour
     {
         if (Vector3.Angle(aHit.contacts[0].normal, Vector3.up) < m_MaxGroundAngle)
         {
-            if (SandPainting.Instance.GetSandColor(transform.position) == SandPainting.SandColor.BOUNCE)
+            if (m_Ability == Ability.BOUNCE)
             {
                 m_Body.velocity = aHit.impulse;
             }
@@ -106,7 +107,7 @@ public class Player : MonoBehaviour
 
             case "Collectible":
                 GameManager.Instance.Collect();
-                Destroy(other.gameObject);
+                other.gameObject.SetActive(false);
                 break;
 
             default:
@@ -122,93 +123,65 @@ public class Player : MonoBehaviour
         // Toggle states and sand color
         if (Input.GetKeyDown(KeyCode.E))
         {
-            m_State++;
-            if (m_State >= State.SIZE)
-                m_State = 0;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            m_Color++;
-            if (m_Color >= SandPainting.SandColor.SIZE)
-                m_Color = 0;
+            m_Ability++;
+            if (m_Ability >= Ability.SIZE)
+                m_Ability = 0;
         }
 
         // Select states and sans color
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            m_State = State.DEFAULT;
+            m_Ability = Ability.DEFAULT;
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            m_State = State.PAINT;
-            m_Color = SandPainting.SandColor.DEFAULT;
+            m_Ability = Ability.BOUNCE;
         }
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            m_State = State.PAINT;
-            m_Color = SandPainting.SandColor.BOUNCE;
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha4))
-        {
-            m_State = State.PAINT;
-            m_Color = SandPainting.SandColor.FAST;
+            m_Ability = Ability.FAST;
         }
 
-        // Reset and set values
-        switch (m_State)
+        // Set UI
+        switch (m_Ability)
         {
-            case State.DEFAULT:
-                UIManager.Instance.SetAbility("Ability");
+            case Ability.DEFAULT:
+                UIManager.Instance.SetAbility("No Ability");
                 break;
 
-            case State.PAINT:
-                switch (m_Color)
-                {
-                    case SandPainting.SandColor.DEFAULT:
-                        UIManager.Instance.SetAbility("Paint Default");
-                        break;
-
-                    case SandPainting.SandColor.BOUNCE:
-                        UIManager.Instance.SetAbility("Paint Bounce");
-                        break;
-
-                    case SandPainting.SandColor.FAST:
-                        UIManager.Instance.SetAbility("Paint Fast");
-                        break;
-
-                    case SandPainting.SandColor.SIZE:
-                        break;
-                    default:
-                        break;
-                }
+            case Ability.BOUNCE:
+                UIManager.Instance.SetAbility("Bounce");
                 break;
 
-            case State.SIZE:
+            case Ability.FAST:
+                UIManager.Instance.SetAbility("Fast");
                 break;
+
             default:
                 break;
         }
+
+        UseAbility();
     }
 
-    void UseAbility(SandPainting.SandColor aColor)
+    void UseAbility()
     {
         m_JumpPower = m_BaseJumpPower;
         m_Speed = m_BaseSpeed;
 
-        switch (aColor)
+        switch (m_Ability)
         {
-            case SandPainting.SandColor.DEFAULT:
+            case Ability.DEFAULT:
                 break;
-            case SandPainting.SandColor.BOUNCE:
+            case Ability.BOUNCE:
                 // Bounce here
                 m_JumpPower = m_AbilityJumpPower;
                 break;
-            case SandPainting.SandColor.FAST:
+            case Ability.FAST:
                 // Fast here
                 m_Speed = m_AbilitySpeed;
                 break;
-            case SandPainting.SandColor.SIZE:
+            case Ability.SIZE:
                 break;
             default:
                 break;
