@@ -88,6 +88,27 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        switch (other.gameObject.tag)
+        {
+            case "Death":
+                GameManager.Instance.End(false);
+                break;
+
+            case "Win":
+                GameManager.Instance.End(true);
+                break;
+
+            case "CheckPoint":
+                GameManager.Instance.SetCheckPoint(transform.position);
+                break;
+
+            default:
+                break;
+        }
+    }
+
     void SwitchState()
     {
         if (GameManager.Instance.m_IsPaused)

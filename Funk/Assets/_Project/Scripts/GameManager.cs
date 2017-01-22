@@ -31,7 +31,6 @@ public class GameManager : MonoBehaviour
     public void Pause()
     {
         m_IsPaused = !m_IsPaused;
-        UIManager.Instance.Pause(m_IsPaused);
         if (m_IsPaused)
             Time.timeScale = 0;
         else
@@ -65,6 +64,7 @@ public class GameManager : MonoBehaviour
         m_Player = aPlayer;
         m_StartPos = aPlayer.gameObject.transform.position;
         SetCheckPoint(m_StartPos);
+
     }
 
     public void SetCheckPoint(Vector3 aPos)
