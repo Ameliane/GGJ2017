@@ -42,7 +42,7 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     Text m_EndText;
 
-    void Start()
+    void Awake()
     {
         if (Instance == null)
             Instance = this;

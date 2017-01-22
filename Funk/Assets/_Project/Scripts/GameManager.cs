@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
     Vector3 m_CheckPointPos = Vector3.zero;
     int m_Collectibles = 0;
 
-    void Start()
+    void Awake()
     {
         if (Instance == null)
             Instance = this;
