@@ -67,6 +67,7 @@ public class GameManager : MonoBehaviour
     {
         // Reset Player position
         m_Player.gameObject.transform.position = m_CheckPointPos;
+        m_Player.ResetAbility();
 
         // Only if won
         if (m_HasWon)

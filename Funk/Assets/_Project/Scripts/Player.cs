@@ -163,6 +163,10 @@ public class Player : MonoBehaviour
 
         UseAbility();
     }
+    public void ResetAbility()
+    {
+        m_Ability = Ability.DEFAULT;
+    }
 
     void UseAbility()
     {
