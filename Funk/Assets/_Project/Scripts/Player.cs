@@ -45,6 +45,8 @@ public class Player : MonoBehaviour
 
         m_Speed = m_BaseSpeed;
         m_JumpPower = m_BaseJumpPower;
+
+        GameManager.Instance.Register(this);
     }
 
     void Update()
@@ -88,6 +90,9 @@ public class Player : MonoBehaviour
 
     void SwitchState()
     {
+        if (GameManager.Instance.m_IsPaused)
+            return;
+
         // Toggle states and sand color
         if (Input.GetKeyDown(KeyCode.E))
         {

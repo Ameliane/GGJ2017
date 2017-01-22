@@ -31,7 +31,13 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     GameObject m_PauseMenu;
 
+    [Header("End Screen")]
 
+    [SerializeField]
+    GameObject m_EndScreen;
+
+    [SerializeField]
+    Text m_EndText;
 
     void Start()
     {
@@ -45,16 +51,29 @@ public class UIManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            m_IsPaused = !m_IsPaused;
-            m_PauseMenu.SetActive(m_IsPaused);
-        }
+
+    }
+
+    public void Pause(bool isPaused)
+    {
+        m_PauseMenu.SetActive(isPaused);
     }
 
     public void SetAbility(string aAbility)
     {
         m_AbilityText.text = aAbility;
+    }
+
+    public void End(string aText)
+    {
+        m_EndText.text = aText;
+        m_EndScreen.SetActive(true);
+    }
+
+    public void Restart()
+    {
+        m_EndScreen.SetActive(false);
+        GameManager.Instance.Restart();
     }
 
     public void OnQuit()
