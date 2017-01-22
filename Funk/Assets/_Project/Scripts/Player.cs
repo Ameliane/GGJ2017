@@ -45,7 +45,7 @@ public class Player : MonoBehaviour
 
         m_Speed = m_BaseSpeed;
         m_JumpPower = m_BaseJumpPower;
-
+        
         GameManager.Instance.Register(this);
     }
 
