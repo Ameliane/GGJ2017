@@ -100,7 +100,7 @@ public class Player : MonoBehaviour
                 GameManager.Instance.End(true);
                 break;
 
-            case "CheckPoint":
+            case "Checkpoint":
                 GameManager.Instance.SetCheckPoint(transform.position);
                 break;
 
