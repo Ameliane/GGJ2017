@@ -67,9 +67,9 @@ public class UIManager : MonoBehaviour
         m_AbilityText.text = aAbility;
     }
 
-    public void SetCollectible(int aNum)
+    public void SetCollectible(string aText)
     {
-        m_CollectibleText.text = aNum.ToString();
+        m_CollectibleText.text = aText;
     }
 
     public void End(string aText)
