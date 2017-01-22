@@ -61,19 +61,27 @@ public class Player : MonoBehaviour
             m_Body.AddForce(Vector3.up * m_JumpPower, ForceMode.VelocityChange);
             m_IsOnGround = false;
         }
-
-        //UseAbility(SandPainting.Instance.GetSandColor(transform.position));
-        //
-        //if (m_State == State.PAINT)
-        //    SandPainting.Instance.SetTerrainColor(transform.position, m_Color);
     }
 
     void FixedUpdate()
     {
         m_Body.AddForce(transform.forward * Input.GetAxisRaw("Vertical") * m_Speed, ForceMode.Acceleration);
-        m_Body.velocity = Vector3.Scale(m_Body.velocity, new Vector3(0.98f, 1, 0.98f)); //Drag, but without vertical drag!
-    }
+        m_Body.velocity = Vector3.Scale(m_Body.velocity, new Vector3(0.97f, 1, 0.97f)); //Drag, but without vertical drag!
 
+        if (Mathf.Abs(Input.GetAxisRaw("Vertical")) < 0.2f)
+        {
+            Vector3 vel = new Vector3(-m_Body.velocity.x, 0, -m_Body.velocity.z);
+            if (vel.magnitude < 0.4f)
+            {
+                m_Body.velocity = new Vector3(0, m_Body.velocity.y, 0);
+            }
+            else
+            {
+                m_Body.AddForce(vel, ForceMode.Acceleration);
+            }
+        }
+    }
+    
     void OnCollisionEnter(Collision aHit)
     {
         if (Vector3.Angle(aHit.contacts[0].normal, Vector3.up) < m_MaxGroundAngle)
