@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     Player m_Player;
     Vector3 m_StartPos = Vector3.zero;
     Vector3 m_CheckPointPos = Vector3.zero;
+    int m_Collectibles = 0;
 
     void Start()
     {
@@ -55,6 +56,9 @@ public class GameManager : MonoBehaviour
         // Reset Player position
         m_Player.gameObject.transform.position = m_CheckPointPos;
 
+        m_Collectibles = 0;
+        UIManager.Instance.SetCollectible(m_Collectibles);
+
         m_IsPaused = true;
         Pause();
     }
@@ -70,5 +74,11 @@ public class GameManager : MonoBehaviour
     public void SetCheckPoint(Vector3 aPos)
     {
         m_CheckPointPos = aPos;
+    }
+
+    public void Collect()
+    {
+        m_Collectibles++;
+        UIManager.Instance.SetCollectible(m_Collectibles);
     }
 }

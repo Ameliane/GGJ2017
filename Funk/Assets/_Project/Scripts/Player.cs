@@ -104,6 +104,11 @@ public class Player : MonoBehaviour
                 GameManager.Instance.SetCheckPoint(transform.position);
                 break;
 
+            case "Collectible":
+                GameManager.Instance.Collect();
+                Destroy(other.gameObject);
+                break;
+
             default:
                 break;
         }

@@ -26,6 +26,9 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     Text m_AbilityText;
 
+    [SerializeField]
+    Text m_CollectibleText;
+
     [Header("Pause Menu")]
 
     [SerializeField]
@@ -62,6 +65,11 @@ public class UIManager : MonoBehaviour
     public void SetAbility(string aAbility)
     {
         m_AbilityText.text = aAbility;
+    }
+
+    public void SetCollectible(int aNum)
+    {
+        m_CollectibleText.text = aNum.ToString();
     }
 
     public void End(string aText)
